@@ -9,9 +9,9 @@ mkdir -p /app/nginx/logs
 touch /app/nginx/logs/access.log /app/nginx/logs/error.log
 (tail -f -n 0 /app/nginx/logs/*.log &)
 
-startFastcgi 'unix:/tmp/nginx-0.socket'
-startFastcgi 'unix:/tmp/nginx-1.socket'
-startFastcgi 'unix:/tmp/nginx-2.socket'
-startFastcgi 'unix:/tmp/nginx-3.socket'
+startFastcgi 'unix:/tmp/nginx-0.sockets'
+startFastcgi 'unix:/tmp/nginx-1.sockets'
+startFastcgi 'unix:/tmp/nginx-2.sockets'
+startFastcgi 'unix:/tmp/nginx-3.sockets'
 
 /app/nginx/nginx -p /app/nginx -c /app/nginx/nginx.conf
