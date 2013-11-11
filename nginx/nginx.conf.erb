@@ -16,11 +16,21 @@ http {
 
     include mime.types;
 
+    upstream servercom {
+        server unix:/tmp/nginx-0.sockets;
+        server unix:/tmp/nginx-1.sockets;
+        server unix:/tmp/nginx-2.sockets;
+        server unix:/tmp/nginx-3.sockets;
+    }
+
     server {
         listen <%= ENV['PORT'] %>;
 
         location / {
-            fastcgi_pass unix:/tmp/nginx.socket;
+            fastcgi_buffer_size 128k;
+            fastcgi_buffers 4 256k;
+            fastcgi_busy_buffers_size 256k;
+            fastcgi_pass servercom;
             include fastcgi_params;
         }
     }

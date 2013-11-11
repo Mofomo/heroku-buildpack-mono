@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
+function startFastcgi {
+	MONO_OPTIONS=--server /app/xsp/bin/fastcgi-mono-server4 /applications=/:/app/_PublishedWebsites/`ls /app/_PublishedWebsites/ | head -1` /socket=$1 &
+}
+
 erb /app/nginx/nginx.conf.erb > /app/nginx/nginx.conf
 
 mkdir -p /app/nginx/logs
 touch /app/nginx/logs/access.log /app/nginx/logs/error.log
 (tail -f -n 0 /app/nginx/logs/*.log &)
 
-MONO_OPTIONS=--server /app/xsp/bin/fastcgi-mono-server4 /applications=/:/app/_PublishedWebsites/`ls /app/_PublishedWebsites/ | head -1` /socket=unix:/tmp/nginx.socket &
+startFastcgi 'unix:/tmp/nginx-0.socket'
+startFastcgi 'unix:/tmp/nginx-1.socket'
+startFastcgi 'unix:/tmp/nginx-2.socket'
+startFastcgi 'unix:/tmp/nginx-3.socket'
+
 /app/nginx/nginx -p /app/nginx -c /app/nginx/nginx.conf
